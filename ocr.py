@@ -1,0 +1,2 @@
+def ocr(image):
+	pass

@@ -35,9 +35,8 @@ def main_window():
 	Style().configure("TButton", font=font)
 	frm = Frame(root, padding=10)
 	frm.grid()
-	Label(frm, text="開始翻譯你看到的文字！", font=font).grid(column=0, row=0)
-	Button(frm, text="翻譯", command=lambda: screenshot_window(root)).grid(column=1, row=0)
-	Button(frm, text="開啟圖片", command=lambda: open_image(root)).grid(column=1, row=1)
+	Button(frm, text="翻譯", command=lambda: screenshot_window(root)).grid(column=0, row=0)
+	Button(frm, text="開啟圖片", command=lambda: open_image(root)).grid(column=1, row=0)
 		
 	root.mainloop()
 

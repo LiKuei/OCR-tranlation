@@ -86,6 +86,9 @@ def on_region_complete(e, window, canvas_model: CanvasModel):
 	# TODO: Add translation here.
 	cropped_screenshot.save("cropped.png")
 	##
+	restore(window)
+
+def restore(window):
 	window.master.deiconify()
 	window.destroy()
 
@@ -95,7 +98,7 @@ def screenshot_window(root):
 	window.attributes(fullscreen=True, topmost=True)
 	window.focus_force()
 	for sequence in ["<Escape>", "<Alt_L>", "<Alt_R>", "<Return>"]:
-		window.bind(sequence, lambda _: window.destroy())
+		window.bind(sequence, lambda _: restore(window))
 
 	canvas = Canvas(
 		window, 
