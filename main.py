@@ -7,7 +7,7 @@ from PIL import Image
 from screenshot import screenshot_window
 from rapidocr import *
 from common import ocr_translate
-import easyocr
+import pytesseract
 
 # (限Windows) 讓程式變得DPI Aware。解決不同螢幕解析度所造成
 # 的文字模糊和Fraction Scaling帶來的錯誤螢幕解析度
@@ -23,12 +23,12 @@ def fix_dpi_awareness_for_windows():
 		except Exception:
 			pass
 
-def translate_image(parent, ocr_engine):
+def translate_image(parent):
 	f = askopenfilename(parent=parent, title="選擇圖片")
 	if f == "":
 		return None
 	
-	ocr_translate(parent, f, ocr_engine)
+	ocr_translate(parent, Image.open(f))
 
 def main_window():
 	root = Tk()
@@ -39,12 +39,14 @@ def main_window():
 	style.configure("TButton", font=font)
 	style.configure("TLabelframe.Label", font=font)
 
-	ocr_engine = easyocr.Reader(["ja", "en"], gpu=False)
+	pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+
+	print(pytesseract.get_languages(config=''))
 	
 	frm = Frame(root, padding=10)
 	frm.grid(row=0, column=0, sticky="w")
-	Button(frm, text="翻譯", command=lambda: screenshot_window(root, ocr_engine)).grid(row=0, column=0, padx=2)
-	Button(frm, text="開啟圖片", command=lambda: translate_image(root, ocr_engine)).grid(row=0, column=1, padx=2)
+	Button(frm, text="翻譯", command=lambda: screenshot_window(root)).grid(row=0, column=0, padx=2)
+	Button(frm, text="開啟圖片", command=lambda: translate_image(root)).grid(row=0, column=1, padx=2)
 	
 	frm_result = LabelFrame(root, text="翻譯結果", padding=5)
 	frm_result.grid(row=1, column=0, padx=10, pady=(0, 10), sticky="nsew")

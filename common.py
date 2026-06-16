@@ -2,8 +2,8 @@ from tkinter import *
 from ocr import ocr
 from translate import translate
 
-def ocr_translate(root, image, ocr_engine):
-	text = ocr(image, ocr_engine)
+def ocr_translate(root, image):
+	text = ocr(image)
 	translated_text = translate(text)
 	root.result_box.config(state=NORMAL)
 	root.result_box.delete("1.0", END)
