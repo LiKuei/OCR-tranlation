@@ -27,18 +27,43 @@ def open_image(parent):
 	
 	return Image.open(f)
 
+result_box = None
+
+def update_display(text):
+	if result_box:
+		result_box.config(state=NORMAL)
+		result_box.delete("1.0", END)
+		result_box.insert(END, text)
+		result_box.config(state=DISABLED)
+
 def main_window():
+	global result_box
 	root = Tk()
 	root.title("截圖翻譯器")
 	root.resizable(False, False)
 	font = Font(family="Microsoft JhengHei", size=10)
 	Style().configure("TButton", font=font)
+	
 	frm = Frame(root, padding=10)
-	frm.grid()
-	Button(frm, text="翻譯", command=lambda: screenshot_window(root)).grid(column=0, row=0)
-	Button(frm, text="開啟圖片", command=lambda: open_image(root)).grid(column=1, row=0)
+	frm.grid(row=0, column=0, sticky="w")
+	Button(frm, text="翻譯", command=lambda: screenshot_window(root)).grid(column=0, row=0, padx=2)
+	Button(frm, text="開啟圖片", command=lambda: open_image(root)).grid(column=1, row=0, padx=2)
+	
+	# 翻譯結果顯示區
+	frm_result = LabelFrame(root, text="翻譯結果", padding=5)
+	frm_result.grid(row=1, column=0, padx=10, pady=(0, 10), sticky="nsew")
+	
+	result_box = Text(frm_result, width=45, height=6, font=("Microsoft JhengHei", 10))
+	result_box.insert(END, "等待翻譯結果...")
+	result_box.config(state=DISABLED)
+	result_box.grid(row=0, column=0, sticky="nsew")
+	
+	scrollbar = Scrollbar(frm_result, command=result_box.yview)
+	scrollbar.grid(row=0, column=1, sticky="ns")
+	result_box.config(yscrollcommand=scrollbar.set)
 		
 	root.mainloop()
 
-fix_dpi_awareness_for_windows()
-main_window()
+if __name__ == '__main__':
+	fix_dpi_awareness_for_windows()
+	main_window()
