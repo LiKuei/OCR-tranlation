@@ -85,7 +85,7 @@ def on_region_complete(e, window, canvas_model, ocr_engine):
 	cropped_screenshot = canvas_model.full_screenshot.crop((x1, y1, x2, y2))
 	cropped_screenshot.save('cropped.png')
 	restore(window)
-	ocr_translate(window.master, cropped_screenshot, ocr_engine)
+	ocr_translate(window.master, 'cropped.png', ocr_engine)
 
 def restore(window):
 	window.master.deiconify()

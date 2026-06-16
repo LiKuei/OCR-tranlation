@@ -7,6 +7,7 @@ from PIL import Image
 from screenshot import screenshot_window
 from rapidocr import *
 from common import ocr_translate
+import easyocr
 
 # (限Windows) 讓程式變得DPI Aware。解決不同螢幕解析度所造成
 # 的文字模糊和Fraction Scaling帶來的錯誤螢幕解析度
@@ -24,10 +25,10 @@ def fix_dpi_awareness_for_windows():
 
 def translate_image(parent, ocr_engine):
 	f = askopenfilename(parent=parent, title="選擇圖片")
-	if f == '':
+	if f == "":
 		return None
 	
-	ocr_translate(parent, Image.open(f), ocr_engine)
+	ocr_translate(parent, f, ocr_engine)
 
 def main_window():
 	root = Tk()
@@ -38,21 +39,7 @@ def main_window():
 	style.configure("TButton", font=font)
 	style.configure("TLabelframe.Label", font=font)
 
-	# https://rapidai.github.io/RapidOCRDocs/main/model_list/#pp-ocrv4_2
-	ocr_engine = RapidOCR(params={
-        "Det.engine_type": EngineType.ONNXRUNTIME,
-        "Det.lang_type": LangDet.CH,
-        "Det.model_type": ModelType.MOBILE,
-        "Det.ocr_version": OCRVersion.PPOCRV5,
-        "Rec.engine_type": EngineType.ONNXRUNTIME,
-        "Rec.lang_type": LangRec.CH,
-        "Rec.model_type": ModelType.MOBILE,
-        "Rec.ocr_version": OCRVersion.PPOCRV5,
-        "Cls.engine_type": EngineType.ONNXRUNTIME,
-        "Cls.lang_type": LangDet.CH,
-        "Cls.model_type": ModelType.MOBILE,
-        "Cls.ocr_version": OCRVersion.PPOCRV5,
-	})
+	ocr_engine = easyocr.Reader(["ja", "en"], gpu=False)
 	
 	frm = Frame(root, padding=10)
 	frm.grid(row=0, column=0, sticky="w")
@@ -73,6 +60,6 @@ def main_window():
 		
 	root.mainloop()
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 	fix_dpi_awareness_for_windows()
 	main_window()
