@@ -84,13 +84,17 @@ def on_region_complete(e, window, canvas_model: CanvasModel):
 		return
 	
 	cropped_screenshot = canvas_model.full_screenshot.crop((x1, y1, x2, y2))
+	cropped_screenshot.save('cropped.png')
 	text = ocr(cropped_screenshot)
-	translated_text = translate(text)
-	window.master.result_box.config(state=NORMAL)
-	window.master.result_box.delete("1.0", END)
-	window.master.result_box.insert(END, translated_text)
-	window.master.result_box.config(state=DISABLED)
 	restore(window)
+	translated_text = translate(text)
+	update_text(window.master, translated_text)
+
+def update_text(root, text):
+	root.result_box.config(state=NORMAL)
+	root.result_box.delete("1.0", END)
+	root.result_box.insert(END, text)
+	root.result_box.config(state=DISABLED)
 
 def restore(window):
 	window.master.deiconify()

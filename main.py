@@ -16,7 +16,7 @@ def fix_dpi_awareness_for_windows():
 		ctypes.windll.shcore.SetProcessDpiAwareness(2) # Per-monitor DPI aware
 	except Exception:
 		try:
-			ctypes.windll.user32.SetProcessDPIAware() # For Windows 10以下
+			ctypes.windll.user32.SetProcessDPIAware() # For Windows 8以下
 		except Exception:
 			pass
 
