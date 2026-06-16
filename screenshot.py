@@ -2,6 +2,8 @@ from PIL import ImageGrab, ImageTk, ImageEnhance
 from tkinter import *
 from tkinter.ttk import *
 from tkinter.font import Font
+from ocr import ocr
+from translate import translate
 
 class CanvasModel:
 	stroke_size = 5
@@ -82,10 +84,8 @@ def on_region_complete(e, window, canvas_model: CanvasModel):
 		return
 	
 	cropped_screenshot = canvas_model.full_screenshot.crop((x1, y1, x2, y2))
-
-	# TODO: Add translation here.
-	cropped_screenshot.save("cropped.png")
-	##
+	text = ocr(cropped_screenshot)
+	print(text)
 	restore(window)
 
 def restore(window):
