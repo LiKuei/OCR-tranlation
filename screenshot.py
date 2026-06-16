@@ -2,8 +2,7 @@ from PIL import ImageGrab, ImageTk, ImageEnhance
 from tkinter import *
 from tkinter.ttk import *
 from tkinter.font import Font
-from ocr import ocr
-from translate import translate
+from common import ocr_translate
 
 class CanvasModel:
 	stroke_size = 5
@@ -85,16 +84,8 @@ def on_region_complete(e, window, canvas_model, ocr_engine):
 	
 	cropped_screenshot = canvas_model.full_screenshot.crop((x1, y1, x2, y2))
 	cropped_screenshot.save('cropped.png')
-	text = ocr(cropped_screenshot, ocr_engine)
 	restore(window)
-	translated_text = translate(text)
-	update_text(window.master, translated_text)
-
-def update_text(root, text):
-	root.result_box.config(state=NORMAL)
-	root.result_box.delete("1.0", END)
-	root.result_box.insert(END, text)
-	root.result_box.config(state=DISABLED)
+	ocr_translate(window.master, cropped_screenshot, ocr_engine)
 
 def restore(window):
 	window.master.deiconify()

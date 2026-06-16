@@ -6,6 +6,7 @@ from tkinter.ttk import *
 from PIL import Image
 from screenshot import screenshot_window
 from rapidocr import *
+from common import ocr_translate
 
 # (限Windows) 讓程式變得DPI Aware。解決不同螢幕解析度所造成
 # 的文字模糊和Fraction Scaling帶來的錯誤螢幕解析度
@@ -21,26 +22,28 @@ def fix_dpi_awareness_for_windows():
 		except Exception:
 			pass
 
-def open_image(parent):
+def translate_image(parent, ocr_engine):
 	f = askopenfilename(parent=parent, title="選擇圖片")
 	if f == '':
 		return None
 	
-	return Image.open(f)
+	ocr_translate(parent, Image.open(f), ocr_engine)
 
 def main_window():
 	root = Tk()
 	root.title("截圖翻譯器")
 	root.resizable(False, False)
 	font = Font(family="Microsoft JhengHei", size=10)
-	Style().configure("TButton", font=font)
+	style = Style()
+	style.configure("TButton", font=font)
+	style.configure("TLabelFrame.Label", font=font)
 
 	# https://rapidai.github.io/RapidOCRDocs/main/model_list/#pp-ocrv4_2
 	ocr_engine = RapidOCR(params={
         "Det.engine_type": EngineType.ONNXRUNTIME,
         "Det.lang_type": LangDet.CH,
         "Det.model_type": ModelType.MOBILE,
-        "Det.ocr_version": OCRVersion.PPOCRV4,
+        "Det.ocr_version": OCRVersion.PPOCRV5,
         "Rec.engine_type": EngineType.ONNXRUNTIME,
         "Rec.lang_type": LangRec.CH,
         "Rec.model_type": ModelType.MOBILE,
@@ -49,15 +52,13 @@ def main_window():
         "Cls.lang_type": LangDet.CH,
         "Cls.model_type": ModelType.MOBILE,
         "Cls.ocr_version": OCRVersion.PPOCRV5,
-    
-})
+	})
 	
 	frm = Frame(root, padding=10)
 	frm.grid(row=0, column=0, sticky="w")
-	Button(frm, text="翻譯", command=lambda: screenshot_window(root, ocr_engine)).grid(column=0, row=0, padx=2)
-	Button(frm, text="開啟圖片", command=lambda: open_image(root)).grid(column=1, row=0, padx=2)
+	Button(frm, text="翻譯", command=lambda: screenshot_window(root, ocr_engine)).grid(row=0, column=0, padx=2)
+	Button(frm, text="開啟圖片", command=lambda: translate_image(root, ocr_engine)).grid(row=0, column=1, padx=2)
 	
-	# 翻譯結果顯示區
 	frm_result = LabelFrame(root, text="翻譯結果", padding=5)
 	frm_result.grid(row=1, column=0, padx=10, pady=(0, 10), sticky="nsew")
 	
