@@ -1,7 +1,4 @@
-import pytesseract
+def ocr(image, ocr_engine):
+	text = ocr_engine(image)
 
-def ocr(image):
-	pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-	text = pytesseract.image_to_string(image, lang='jpn+jpn_vert')
-
-	return text
+	return "\n".join(text.txts)

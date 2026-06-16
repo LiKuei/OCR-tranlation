@@ -73,7 +73,7 @@ def drawing_region(e, canvas_model):
 	canvas_model.canvas.cropped_screenshot = tk_cropped_screenshot = ImageTk.PhotoImage(cropped_screenshot)
 	canvas_model.rectangle_screenshot = canvas_model.canvas.create_image(x1, y1, image=tk_cropped_screenshot, anchor=NW)
 
-def on_region_complete(e, window, canvas_model: CanvasModel):
+def on_region_complete(e, window, canvas_model, ocr_engine):
 	if canvas_model.in_resetting_period:
 		return
 	(x1, x2) = get_minmax(canvas_model.rectangle_origin[0], e.x)
@@ -85,7 +85,7 @@ def on_region_complete(e, window, canvas_model: CanvasModel):
 	
 	cropped_screenshot = canvas_model.full_screenshot.crop((x1, y1, x2, y2))
 	cropped_screenshot.save('cropped.png')
-	text = ocr(cropped_screenshot)
+	text = ocr(cropped_screenshot, ocr_engine)
 	restore(window)
 	translated_text = translate(text)
 	update_text(window.master, translated_text)
@@ -100,7 +100,7 @@ def restore(window):
 	window.master.deiconify()
 	window.destroy()
 
-def screenshot_window(root):
+def screenshot_window(root, ocr_engine):
 	root.iconify()
 	window = Toplevel(root)
 	window.attributes(fullscreen=True, topmost=True)
@@ -122,4 +122,4 @@ def screenshot_window(root):
 	canvas.bind("<Button-1>", lambda e: init_region(e, canvas_model))
 	canvas.bind("<ButtonRelease-3>", lambda _: reset_region(canvas_model))
 	canvas.bind("<B1-Motion>", lambda e: drawing_region(e, canvas_model))
-	canvas.bind("<ButtonRelease-1>", lambda e: on_region_complete(e, window, canvas_model))
+	canvas.bind("<ButtonRelease-1>", lambda e: on_region_complete(e, window, canvas_model, ocr_engine))

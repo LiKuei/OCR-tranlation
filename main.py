@@ -5,6 +5,7 @@ from tkinter import *
 from tkinter.ttk import *
 from PIL import Image
 from screenshot import screenshot_window
+from rapidocr import *
 
 # (限Windows) 讓程式變得DPI Aware。解決不同螢幕解析度所造成
 # 的文字模糊和Fraction Scaling帶來的錯誤螢幕解析度
@@ -28,16 +29,32 @@ def open_image(parent):
 	return Image.open(f)
 
 def main_window():
-	global result_box
 	root = Tk()
 	root.title("截圖翻譯器")
 	root.resizable(False, False)
 	font = Font(family="Microsoft JhengHei", size=10)
 	Style().configure("TButton", font=font)
+
+	# https://rapidai.github.io/RapidOCRDocs/main/model_list/#pp-ocrv4_2
+	ocr_engine = RapidOCR(params={
+        "Det.engine_type": EngineType.ONNXRUNTIME,
+        "Det.lang_type": LangDet.CH,
+        "Det.model_type": ModelType.MOBILE,
+        "Det.ocr_version": OCRVersion.PPOCRV4,
+        "Rec.engine_type": EngineType.ONNXRUNTIME,
+        "Rec.lang_type": LangRec.CH,
+        "Rec.model_type": ModelType.MOBILE,
+        "Rec.ocr_version": OCRVersion.PPOCRV5,
+        "Cls.engine_type": EngineType.ONNXRUNTIME,
+        "Cls.lang_type": LangDet.CH,
+        "Cls.model_type": ModelType.MOBILE,
+        "Cls.ocr_version": OCRVersion.PPOCRV5,
+    
+})
 	
 	frm = Frame(root, padding=10)
 	frm.grid(row=0, column=0, sticky="w")
-	Button(frm, text="翻譯", command=lambda: screenshot_window(root)).grid(column=0, row=0, padx=2)
+	Button(frm, text="翻譯", command=lambda: screenshot_window(root, ocr_engine)).grid(column=0, row=0, padx=2)
 	Button(frm, text="開啟圖片", command=lambda: open_image(root)).grid(column=1, row=0, padx=2)
 	
 	# 翻譯結果顯示區
