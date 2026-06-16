@@ -36,7 +36,7 @@ def main_window():
 	font = Font(family="Microsoft JhengHei", size=10)
 	style = Style()
 	style.configure("TButton", font=font)
-	style.configure("TLabelFrame.Label", font=font)
+	style.configure("TLabelframe.Label", font=font)
 
 	# https://rapidai.github.io/RapidOCRDocs/main/model_list/#pp-ocrv4_2
 	ocr_engine = RapidOCR(params={
