@@ -53,7 +53,7 @@ def main_window():
 	frm_result = LabelFrame(root, text="翻譯結果", padding=5)
 	frm_result.grid(row=1, column=0, padx=10, pady=(0, 10), sticky="nsew")
 	
-	result_box = Text(frm_result, width=45, height=6, font=("Microsoft JhengHei", 10))
+	result_box = Text(frm_result, width=45, height=6, font=font)
 	result_box.insert(END, "等待翻譯結果...")
 	result_box.config(state=DISABLED)
 	result_box.grid(row=0, column=0, sticky="nsew")
