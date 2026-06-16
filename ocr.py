@@ -2,4 +2,6 @@ import pytesseract
 
 def ocr(image):
 	pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-	print(pytesseract.image_to_string(image))
+	text = pytesseract.image_to_string(image, lang='jpn+jpn_vert')
+
+	return text

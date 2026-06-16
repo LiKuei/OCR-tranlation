@@ -85,7 +85,11 @@ def on_region_complete(e, window, canvas_model: CanvasModel):
 	
 	cropped_screenshot = canvas_model.full_screenshot.crop((x1, y1, x2, y2))
 	text = ocr(cropped_screenshot)
-	print(text)
+	translated_text = translate(text)
+	window.master.result_box.config(state=NORMAL)
+	window.master.result_box.delete("1.0", END)
+	window.master.result_box.insert(END, translated_text)
+	window.master.result_box.config(state=DISABLED)
 	restore(window)
 
 def restore(window):
