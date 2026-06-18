@@ -5,7 +5,6 @@ from tkinter import *
 from tkinter.ttk import *
 from PIL import Image
 from screenshot import screenshot_window
-from rapidocr import *
 from common import ocr_translate
 import pytesseract
 
@@ -41,7 +40,7 @@ def main_window():
 
 	pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
-	print(pytesseract.get_languages(config=''))
+	print(pytesseract.get_languages())
 	
 	frm = Frame(root, padding=10)
 	frm.grid(row=0, column=0, sticky="w")
